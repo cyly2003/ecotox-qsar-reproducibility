@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Please cite the accompanying study and the final archived release."
+title: "EcoTox-QSAR aquatic and soil toxicity prediction reproducibility package"
+type: software
+authors:
+  - family-names: Liang
+    given-names: YangYang
+    affiliation: Northeast Normal University
+    orcid: https://orcid.org/0009-0007-1130-4762
+license: MIT
