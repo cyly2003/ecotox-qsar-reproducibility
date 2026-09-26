@@ -124,6 +124,56 @@ def replay_core_metrics(assets_dir: Path) -> int:
     return len(full)
 
 
+def verify_core_ensembles(assets_dir: Path) -> int:
+    seeds = (42, 2042, 3407, 8417)
+    key = ["stable_record_id", "model_head"]
+    checked = 0
+    with zipfile.ZipFile(assets_dir / "core_ensemble_predictions.zip") as ensembles:
+        with zipfile.ZipFile(assets_dir / "core_seed_predictions_and_inputs.zip") as members:
+            for name in ensembles.namelist():
+                run = Path(name).parent.name
+                ensemble = pd.read_parquet(io.BytesIO(ensembles.read(name)))
+                if ensemble.duplicated(key).any():
+                    raise ValueError(f"Duplicate ensemble row identity: {run}")
+                ensemble = ensemble.set_index(key).sort_index()
+                predictions = []
+                for seed in seeds:
+                    member_name = (
+                        f"predictions/core_seeds/{run}_seed{seed}/predictions.parquet"
+                    )
+                    member = pd.read_parquet(io.BytesIO(members.read(member_name)))
+                    if member.duplicated(key).any():
+                        raise ValueError(f"Duplicate seed row identity: {member_name}")
+                    member = member.set_index(key).sort_index()
+                    if not member.index.equals(ensemble.index):
+                        raise ValueError(f"Seed and ensemble row IDs differ: {member_name}")
+                    for column in ("route", "target_scale"):
+                        if not member[column].equals(ensemble[column]):
+                            raise ValueError(f"Seed {column} mismatch: {member_name}")
+                    if not np.allclose(
+                        member["target"], ensemble["target"],
+                        rtol=0, atol=1e-10, equal_nan=True,
+                    ):
+                        raise ValueError(f"Seed target mismatch: {member_name}")
+                    predictions.append(member["prediction"].to_numpy(dtype=float))
+                values = np.stack(predictions)
+                count = np.isfinite(values).sum(axis=0)
+                mean = np.divide(
+                    np.nansum(values, axis=0), count,
+                    out=np.full(len(count), np.nan), where=count > 0,
+                )
+                if not np.array_equal(count, ensemble["ensemble_member_count"]):
+                    raise ValueError(f"Seed count mismatch: {run}")
+                if not np.allclose(
+                    mean, ensemble["prediction"], rtol=0, atol=1e-8, equal_nan=True
+                ):
+                    raise ValueError(f"Four-seed mean mismatch: {run}")
+                checked += 1
+    if checked != 28:
+        raise ValueError(f"Expected 28 verified core ensembles, got {checked}")
+    return checked
+
+
 def verify_model_objects(assets_dir: Path) -> int:
     with zipfile.ZipFile(assets_dir / "primary_mtl_models.zip") as archive:
         manifests = [name for name in archive.namelist() if name.endswith("manifest.json")]
@@ -153,11 +203,12 @@ def main() -> None:
     args = parser.parse_args()
     sources = verify_sources()
     members = verify_assets(args.assets_dir, args.deep)
+    ensembles = verify_core_ensembles(args.assets_dir)
     arms = replay_core_metrics(args.assets_dir)
     models = verify_model_objects(args.assets_dir)
     print(
         f"PASS: {sources} source/result files; {members} ZIP members; "
-        f"{arms} core arms; {models} model objects"
+        f"{arms} core arms; {ensembles} four-seed ensembles; {models} model objects"
     )
 
 

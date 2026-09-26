@@ -62,10 +62,11 @@ python verify_release.py --assets-dir assets --deep
 
 The script checks every staged code/result SHA-256, each ZIP and member hash,
 the 32 supplied model/preprocessing objects against their source identities,
-and pooled MAE, RMSE, and R2 for all 28 full-cohort core arms from their saved
-fixed-test row predictions. It does not retrain a model or create new data
-splits. The result is a prediction-level four-seed ensemble metric, not a
-mean of four seed-level scores.
+all 28 core ensembles against their four frozen seed predictions, and pooled
+MAE, RMSE, and R2 for all 28 full-cohort core arms from saved fixed-test rows.
+It does not retrain a model or create new data splits. The result is a
+prediction-level four-seed ensemble metric, not a mean of four seed-level
+scores.
 
 ## Reproducibility boundary
 
