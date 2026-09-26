@@ -80,7 +80,8 @@ Do not describe this package as a one-command reconstruction of every figure
 or analysis. Consult the manuscript and Supporting Information for the
 definition and interpretation of each experiment.
 
-The observation source is the U.S. EPA ECOTOX Knowledgebase. The MIT license
+The observation source is the [U.S. EPA ECOTOX Knowledgebase](https://www.epa.gov/ecotox).
+The MIT license
 applies to author-created code only; it does not relicense ECOTOX records,
 third-party dependencies, or external data. Cite both the study and the
 ECOTOX source when reusing the processed observations.
