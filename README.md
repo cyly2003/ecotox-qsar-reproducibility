@@ -7,6 +7,15 @@ the aquatic and soil ecotoxicity study. The [online predictor](https://ecotox-qs
 is an interactive demonstration; it is not the download or training interface
 for this research package.
 
+## Citation and archive
+
+The frozen v1.0.1 source snapshot has the version-specific Zenodo DOI
+[10.5281/zenodo.22981474](https://doi.org/10.5281/zenodo.22981474).
+The Zenodo record contains the source and numerical tables in this repository,
+but **not** the nine large data, prediction, and model-object ZIPs. Download
+those from the [v1.0.1 GitHub Release](https://github.com/cyly2003/ecotox-qsar-reproducibility/releases/tag/v1.0.1)
+and verify them against `ASSETS.json`. Cite the accompanying study separately.
+
 ## Evaluation scope
 
 W00 (aquatic) and M00 (soil) are separate prediction routes. Their target
