@@ -9,11 +9,14 @@ for this research package.
 
 ## Citation and archive
 
-The frozen v1.0.1 source snapshot has the version-specific Zenodo DOI
-[10.5281/zenodo.22981474](https://doi.org/10.5281/zenodo.22981474).
-The Zenodo record contains the source and numerical tables in this repository,
-but **not** the nine large data, prediction, and model-object ZIPs. Download
-those from the [v1.0.1 GitHub Release](https://github.com/cyly2003/ecotox-qsar-reproducibility/releases/tag/v1.0.1)
+Version 1.0.2 adds the upstream cleaning scripts and a required structure/split
+helper; it does not change the supplied observations, predictions, or metrics.
+The version-specific Zenodo DOI will be added after the new source snapshot is
+published. The [v1.0.1 DOI](https://doi.org/10.5281/zenodo.22981474)
+archives the prior source and does not contain these added scripts. Zenodo
+archives source and numerical tables, but **not** the nine large data,
+prediction, and model-object ZIPs. Download those from the
+[v1.0.2 GitHub Release](https://github.com/cyly2003/ecotox-qsar-reproducibility/releases/tag/v1.0.2)
 and verify them against `ASSETS.json`. Cite the accompanying study separately.
 
 ## Evaluation scope
@@ -37,9 +40,11 @@ deployment materials are included.
 
 | Location | Contents |
 | --- | --- |
-| `code/` | Frozen model, preprocessing, split, and training implementations |
+| `code/` | Model, upstream cleaning, preprocessing, split, and training implementations |
+| `code/cleaning/` | Four upstream ECOTOX cleaning scripts |
+| `code/scripts/build_scaffold_cluster_splits.py` | Structure normalization and scaffold-split helper required by `build_data.py` |
 | `results/` | Numerical result tables, without figure exports |
-| `FILES_SHA256.csv` | Checksums for the 111 frozen code and result files |
+| `FILES_SHA256.csv` | Checksums for the 116 code and result files |
 | `ASSETS.json` and `ASSET_FILES_SHA256.csv` | Nine downloadable asset ZIPs and their 793 member checksums |
 | `verify_release.py` | Integrity and core pooled-metric replay |
 
@@ -50,6 +55,20 @@ ensemble row predictions, traditional-model and representation-probe row
 predictions, input-ablation predictions and draws, and the primary MTL model
 weights with their preprocessing objects and manifests. The earlier website
 model snapshot is not part of this package.
+
+## Data preparation scope
+
+The four `code/cleaning/` files expose the upstream ECOTOX cleaning logic.
+Only two machine-specific default input paths in
+`build_clean_ecotox_sqlite.py` were replaced with relative `inputs/` paths;
+the cleaning transformations were not changed. The structure normalization
+and scaffold helper is supplied under `code/scripts/` so the public
+`revision_pipeline.build_data` import resolves. These scripts do not turn the
+release into a standalone raw-data rebuild: the original ECOTOX SQLite source
+and intermediate local SQLite snapshots are not distributed here. The
+processed observations and fixed splits are instead supplied in release
+assets. Inspect the manuscript and Supporting Information for source version,
+filters, split definitions, and interpretation of the resulting tables.
 
 To avoid repeating model-input tables in every prediction file, 608 prediction
 Parquet files contain an exact-value column projection. The retained fields

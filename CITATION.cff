@@ -2,8 +2,7 @@ cff-version: 1.2.0
 message: "Please cite the accompanying study and the final archived release."
 title: "EcoTox-QSAR aquatic and soil toxicity prediction reproducibility package"
 type: software
-version: 1.0.1
-doi: 10.5281/zenodo.22981474
+version: 1.0.2
 authors:
   - family-names: Liang
     given-names: YangYang

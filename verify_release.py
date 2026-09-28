@@ -19,6 +19,13 @@ import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parent
+REQUIRED_METHOD_SOURCES = {
+    "code/cleaning/annotate_species_habitat.py",
+    "code/cleaning/build_clean_ecotox_sqlite.py",
+    "code/cleaning/curate_ecotox_categories.py",
+    "code/cleaning/standardize_clean_ecotox_sqlite.py",
+    "code/scripts/build_scaffold_cluster_splits.py",
+}
 
 
 def digest(stream) -> str:
@@ -35,6 +42,10 @@ def csv_rows(path: Path) -> list[dict[str, str]]:
 
 def verify_sources() -> int:
     rows = csv_rows(ROOT / "FILES_SHA256.csv")
+    listed = {row["path"] for row in rows}
+    missing = REQUIRED_METHOD_SOURCES - listed
+    if missing:
+        raise ValueError(f"Required method sources absent from manifest: {sorted(missing)}")
     for row in rows:
         path = ROOT / row["path"]
         if not path.is_file() or path.stat().st_size != int(row["bytes"]):
