@@ -11,8 +11,8 @@ for this research package.
 
 Version 1.0.2 adds the upstream cleaning scripts and a required structure/split
 helper; it does not change the supplied observations, predictions, or metrics.
-The version-specific Zenodo DOI will be added after the new source snapshot is
-published. The [v1.0.1 DOI](https://doi.org/10.5281/zenodo.22981474)
+The version-specific Zenodo DOI is
+[10.5281/zenodo.23013567](https://doi.org/10.5281/zenodo.23013567). The [v1.0.1 DOI](https://doi.org/10.5281/zenodo.22981474)
 archives the prior source and does not contain these added scripts. Zenodo
 archives source and numerical tables, but **not** the nine large data,
 prediction, and model-object ZIPs. Download those from the
